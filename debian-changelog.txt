@@ -1,3 +1,9 @@
+mdvl-mahalt (1.0.2) stable; urgency=medium
+
+  * Fix syntax in shellscript.
+
+ -- Linux-Fan, Ma_Sys.ma <Ma_Sys.ma@web.de>  Sun, 13 Sep 2020 22:52:13 +0200
+
 mdvl-mahalt (1.0.1) stable; urgency=medium
 
   * Rewrite mahalt to externalize databackup invocation to potentially
