@@ -1,6 +1,5 @@
-#!/bin/sh
-#
-# Ma_Sys.ma Shutdown script 2.0.0.2, Copyright (c) 2012, 2017 Ma_Sys.ma.
+#!/bin/sh -eu
+# Ma_Sys.ma Shutdown script 3.0.0, Copyright (c) 2012, 2017, 2020 Ma_Sys.ma.
 # For further info send an e-mail to Ma_Sys.ma@web.de.
 #
 # Maintenace:
@@ -11,51 +10,58 @@
 #
 # You might need to replace "linux-fan" by your username.
 # When using groups add a "%" before the group, e.g.: "%mahalters"
-#
 
-if [ "$1" = "--help" -o "$1" = "-h" ]
-then
-	echo "Usage: $0 [-r|-f]"
-	echo " -r  Restart instead of shutdown"
-	echo " -f  Do it fast (without rsyncing)"
-	echo "See the sourcecode for version and copyright"
-elif [ $(id -u) != 0 ]
-then
-	echo Restarting with root permissions...
-	# Try sudo and use su on fail
-	/usr/bin/sudo $0 $*
-	ret=$?
-	if [ $ret != 0 -a $ret != 64 ]
-	then
-		/bin/su -c $0 $*
-	fi
-else
-	echo Got root permissions.
-	if [ "$1" != "-f" ]
-	then
-		echo "Databackup..."
-		/usr/bin/databackup -i
-		if [ "$?" != "0" ]; then
-			echo Backup failed. Shutdown aborted.
-			exit 64
-		fi
-		if [ "$(cat /etc/hostname)" = pte5 ]; then
-			echo Databackup Web...
-			/usr/bin/databackup -w
-			# currently, failures are not relevant...
-		fi
-	fi
-	echo Terminating screenindex and other Java applications...
-	/usr/bin/killall -s TERM java || echo Screenindex was already \
-				terminated before this script was invoked.
-	echo Screenindex should not be running anymore.
-	echo Syncing...
-	/bin/sync
-	if [ "$1" = "" ]
-	then
-		/sbin/halt -p || echo Failed to halt.
-	else
-		/sbin/reboot || echo Failed to reboot.
-	fi
+submsg() { printf '\033[1;36m-- %s :: %s --\033[0m\n' "$*" \
+						"$(date "+%d.%m.%Y %H:%M:%S")" }
+
+if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+	head -n 4 "$0" | tail -n 3 | cut -c 3-
+	cat <<EOF
+USAGE $0 [-r|-f]
+
+-r  Reboot instead of shutdown
+-f  Fast -- skip execution of hooks from /usr/lib/mahalt.d
+EOF
+	exit 0
 fi
 
+if [ "$(id -u)" = 0 ]; then
+	echo "mahalt$$: Got root permissions."
+
+	if [ "$1" = "-f" ]; then
+		echo "mahalt$$: Hooks skipped."
+		shift
+	else
+		echo "mahalt$$: Invoking hooks..." | tee /var/log/mahalt
+		for i in /usr/lib/mahalt.d/*; do
+			[ -x "$i" ] || continue
+			submsg "Run hook $(basename "$i")" | \
+							tee -a /var/log/mahalt
+			"$i" --by-mahalt 2>&1 | tee -a /var/log/mahalt
+		done
+		echo "mahalt$$: Hook execution complete." | \
+							tee -a /var/log/mahalt
+	fi
+
+	echo "mahalt$$: Terminating Java applications..."
+	killall -s TERM java || \
+			echo "mahalt$$: No Java applications were running."
+
+	echo "mahalt$$: syncing..."
+	sync
+
+	if [ "$1" = "-r" ]; then
+		exec /sbin/reboot
+	else
+		exec /sbin/halt -p
+	fi
+else
+	echo "mahalt$$: Restarting with root permissions..."
+	# Try sudo and use su on fail
+	rv=0
+	sudo "$0" "$@" || rv=$?
+	if ! [ "$rv" = 0 ] && ! [ "$rv" = 64 ]; then
+		exec su -c "$0 $*"
+	fi
+	exit "$rv"
+fi
