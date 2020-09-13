@@ -1,3 +1,10 @@
+mdvl-mahalt (1.0.1) stable; urgency=medium
+
+  * Rewrite mahalt to externalize databackup invocation to potentially
+    machine-specific script. Trigger rebuild.
+
+ -- Linux-Fan, Ma_Sys.ma <Ma_Sys.ma@web.de>  Sun, 13 Sep 2020 22:49:18 +0200
+
 mdvl-mahalt (1.0.0) stable; urgency=medium
 
   * Package created with MDPC 2.
