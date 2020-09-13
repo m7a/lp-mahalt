@@ -1,0 +1,13 @@
+#
+# Ma_Sys.ma "mahalt" sudo specifications.
+# This allows every user to issue "mahalt" in order to shut down the system.
+#
+# WARNING: It is REQUIRED to disable this on ANY kind of SERVER.
+#          To do so, delete this file or backup it if you plan to probably
+#          revert old behaviour.
+#
+
+# Configure command to use (always use whole path here)
+Cmnd_Alias	SHUTDOWN = /usr/bin/mahalt
+linux-fan	ALL=NOPASSWD: SHUTDOWN
+

@@ -1,0 +1,6 @@
+mdvl-mahalt (1.0.0) stable; urgency=medium
+
+  * Package created with MDPC 2.
+    Script extracted from former mdvl-scripts package.
+
+ -- Linux-Fan, Ma_Sys.ma <Ma_Sys.ma@web.de>  Sun, 13 Sep 2020 18:43:26 +0200

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="build">
+
+<!-- APPLICATION METADATA -->
+<property name="masysma.target"     value="_"/>
+<property name="mdpc.name"          value="mdvl-mahalt"/>
+<property name="mdpc.section"       value="utils"/>
+<property name="mdpc.arch"          value="all"/>
+<property name="mdpc.recommends"    value="sudo"/>
+<property name="mdpc.conflicts"     value="mdvl-conf-protected (&lt;= 1.0.10), mdvl-scripts (&lt;= 1.0.376)"/>
+<property name="mdpc.descrs"        value="MDVL System Shutdown Command"/>
+<property name="mdpc.file.install">
+50-masysma-mahalt /etc/sudoers.d
+mahalt /usr/bin
+</property>
+<property name="mdpc.descrl">
+ Provides script `mahalt` and sudo configuration allowing user `linux-fan`
+ to shutdown the system. Additionally, `mahalt` may perform various actions
+ before powering off the system such as running backup jobs etc.
+ .
+ Note: This script is expected to be used in interactive/desktop-style systems.
+ For servers, it is not recommended to make shutting down an action available to
+ unprivileged users!
+</property>
+
+<!-- CI INTEGRATION -->
+<target name="package_triggered" depends="package">
+	<property name="masysma.ci.trigger" value="newver"/>
+</target>
+
+<!-- CONST TPL IMPORT -->
+<property environment="env"/>
+<condition property="masysma.internal.includepath.rel" value="${env.MDVL_CI_PHOENIX_ROOT}" else=".."><isset property="env.MDVL_CI_PHOENIX_ROOT"/></condition>
+<property name="masysma.internal.includepath" location="${masysma.internal.includepath.rel}"/>
+<property name="masysma.internal.loadpath" value="${masysma.internal.includepath}/co-build/ant-build-template.xml"/>
+<condition property="masysma.internal.load" value="file://${masysma.internal.loadpath}" else="https://raw.githubusercontent.com/m7a/co-build/master/ant-build-template.xml"><resourceexists><file file="${masysma.internal.loadpath}"/></resourceexists></condition>
+<import><url url="${masysma.internal.load}"/></import>
+
+</project>

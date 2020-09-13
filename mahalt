@@ -1,0 +1,61 @@
+#!/bin/sh
+#
+# Ma_Sys.ma Shutdown script 2.0.0.2, Copyright (c) 2012, 2017 Ma_Sys.ma.
+# For further info send an e-mail to Ma_Sys.ma@web.de.
+#
+# Maintenace:
+# Keep these lines in your /etc/sudoers file:
+#
+#   Cmnd_Alias      SHUTDOWN = /usr/bin/mahalt
+#   linux-fan       ALL=NOPASSWD: SHUTDOW
+#
+# You might need to replace "linux-fan" by your username.
+# When using groups add a "%" before the group, e.g.: "%mahalters"
+#
+
+if [ "$1" = "--help" -o "$1" = "-h" ]
+then
+	echo "Usage: $0 [-r|-f]"
+	echo " -r  Restart instead of shutdown"
+	echo " -f  Do it fast (without rsyncing)"
+	echo "See the sourcecode for version and copyright"
+elif [ $(id -u) != 0 ]
+then
+	echo Restarting with root permissions...
+	# Try sudo and use su on fail
+	/usr/bin/sudo $0 $*
+	ret=$?
+	if [ $ret != 0 -a $ret != 64 ]
+	then
+		/bin/su -c $0 $*
+	fi
+else
+	echo Got root permissions.
+	if [ "$1" != "-f" ]
+	then
+		echo "Databackup..."
+		/usr/bin/databackup -i
+		if [ "$?" != "0" ]; then
+			echo Backup failed. Shutdown aborted.
+			exit 64
+		fi
+		if [ "$(cat /etc/hostname)" = pte5 ]; then
+			echo Databackup Web...
+			/usr/bin/databackup -w
+			# currently, failures are not relevant...
+		fi
+	fi
+	echo Terminating screenindex and other Java applications...
+	/usr/bin/killall -s TERM java || echo Screenindex was already \
+				terminated before this script was invoked.
+	echo Screenindex should not be running anymore.
+	echo Syncing...
+	/bin/sync
+	if [ "$1" = "" ]
+	then
+		/sbin/halt -p || echo Failed to halt.
+	else
+		/sbin/reboot || echo Failed to reboot.
+	fi
+fi
+
