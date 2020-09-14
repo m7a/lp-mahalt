@@ -1,3 +1,9 @@
+mdvl-mahalt (1.0.4) stable; urgency=medium
+
+  * 2nd attempt to fix parameter not set.
+
+ -- Linux-Fan, Ma_Sys.ma <Ma_Sys.ma@web.de>  Mon, 14 Sep 2020 03:27:48 +0200
+
 mdvl-mahalt (1.0.3) stable; urgency=medium
 
   * Fix parameter not set error.

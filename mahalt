@@ -28,7 +28,7 @@ fi
 if [ "$(id -u)" = 0 ]; then
 	echo "mahalt$$: Got root permissions."
 
-	if [ "$1" = "-f" ]; then
+	if [ $# -ge 1 ] && [ "$1" = "-f" ]; then
 		echo "mahalt$$: Hooks skipped."
 		shift
 	else
@@ -50,7 +50,7 @@ if [ "$(id -u)" = 0 ]; then
 	echo "mahalt$$: syncing..."
 	sync
 
-	if [ "$1" = "-r" ]; then
+	if [ $# -ge 1 ] && [ "$1" = "-r" ]; then
 		exec /sbin/reboot
 	fi
 
