@@ -67,10 +67,30 @@ Options
 `-r`  Reboot instead of shutdown
 ----  --------------------------------------------------------
 
+Rationale
+=========
+
+Similar to [vifm-ext(32)](../32/vifm-ext.xhtml), this script could have been
+written in a manner that would have avoided the use of sudo/full-blown root
+privileges for shutdown. Modern desktop environments use `dbus`-based calls
+to invoke shutdown and the regular `systemctl poweroff` nowdays often works for
+unprivileged users if systemd detects that they are the only ones logged in to
+the local system.
+
+This route was not taken for the following reasons:
+
+ * Similar to mounting, the interface for “shutdown without root” often broke
+   between release upgrades.
+ * Ma_Sys.ma Backups run as root as to avoid the problem of files being
+   inaccessible due to missing permissions. Hence, that part would need to
+   run with sudo anyways.
+
 Bugs
 ====
 
  * File names from below `/usr/lib/mahalt.d` may not contain spaces.
+ * The `killall -s TERM java` invocation may stop some processes that should
+   better be managed by their respective “supervisors” like systemd or docker...
 
 See Also
 ========
