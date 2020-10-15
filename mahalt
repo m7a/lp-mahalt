@@ -1,5 +1,5 @@
 #!/bin/sh -eu
-# Ma_Sys.ma Shutdown script 3.0.2, Copyright (c) 2012, 2017, 2020 Ma_Sys.ma.
+# Ma_Sys.ma Shutdown script 3.0.3, Copyright (c) 2012, 2017, 2020 Ma_Sys.ma.
 # For further info send an e-mail to Ma_Sys.ma@web.de.
 #
 # Maintenace:
@@ -53,7 +53,7 @@ if [ "$(id -u)" = 0 ]; then
 
 	if [ -e /tmp/nohalt ]; then
 		echo "mahalt$$: found NOHALT file /tmp/nohalt. CANCEL!"
-		exit 1
+		exit 64
 	fi
 
 	if [ $# -ge 1 ] && [ "$1" = "-r" ]; then

@@ -1,3 +1,10 @@
+mdvl-mahalt (1.0.6) stable; urgency=medium
+
+  * Set exit code to 64 upon cancelled halt in order not to re-try with `su`
+    in that case.
+
+ -- Linux-Fan, Ma_Sys.ma <Ma_Sys.ma@web.de>  Thu, 15 Oct 2020 13:33:14 +0200
+
 mdvl-mahalt (1.0.5) stable; urgency=medium
 
   * Add check for /tmp/nohalt.
