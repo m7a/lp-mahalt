@@ -1,3 +1,9 @@
+mdvl-mahalt (1.0.8) stable; urgency=medium
+
+  * Remove depends on debianutils.
+
+ -- Linux-Fan, Ma_Sys.ma <Ma_Sys.ma@web.de>  Sun, 18 Oct 2020 00:53:41 +0200
+
 mdvl-mahalt (1.0.7) stable; urgency=medium
 
   * Switch to using run-parts rather than duplicating the script execution code.
