@@ -1,3 +1,9 @@
+mdvl-mahalt (1.0.7) stable; urgency=medium
+
+  * Switch to using run-parts rather than duplicating the script execution code.
+
+ -- Linux-Fan, Ma_Sys.ma <Ma_Sys.ma@web.de>  Sun, 18 Oct 2020 00:38:08 +0200
+
 mdvl-mahalt (1.0.6) stable; urgency=medium
 
   * Set exit code to 64 upon cancelled halt in order not to re-try with `su`

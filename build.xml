@@ -6,6 +6,7 @@
 <property name="mdpc.name"          value="mdvl-mahalt"/>
 <property name="mdpc.section"       value="utils"/>
 <property name="mdpc.arch"          value="all"/>
+<property name="mdpc.depends"       value="debianutils"/> <!-- =run-parts -->
 <property name="mdpc.recommends"    value="sudo"/>
 <property name="mdpc.conflicts"     value="mdvl-conf-protected (&lt;= 1.0.10), mdvl-scripts (&lt;= 1.0.376)"/>
 <property name="mdpc.descrs"        value="MDVL System Shutdown Command"/>
